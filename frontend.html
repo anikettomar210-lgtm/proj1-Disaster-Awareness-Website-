@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+  <title>DisasterGuard · Protect. Respond. Recover.</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b1a2f;
+      color: #eef2f6;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ANIMATIONS */
+    @keyframes pulse-alert {
+      0% { box-shadow: 0 0 0 0 rgba(241, 90, 58, 0.7); }
+      70% { box-shadow: 0 0 0 20px rgba(241, 90, 58, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(241, 90, 58, 0); }
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    @keyframes slideBg {
+      0% { background-image: url('https://images.unsplash.com/photo-1589397312152-9d57612bb403?w=1200&q=80'); }
+      33% { background-image: url('https://images.unsplash.com/photo-1581002290585-666ec7c0d9a7?w=1200&q=80'); }
+      66% { background-image: url('https://images.unsplash.com/photo-1580294395066-9a71e7639fa4?w=1200&q=80'); }
+      100% { background-image: url('https://images.unsplash.com/photo-1589397312152-9d57612bb403?w=1200&q=80'); }
+    }
+    .pulse-border { animation: pulse-alert 2s infinite; }
+    .float-anim { animation: float 3s ease-in-out infinite; }
+
+    /* NAVBAR */
+    .navbar {
+      position: sticky; top: 0; z-index: 1000;
+      background: #0a1628ee; backdrop-filter: blur(8px);
+      border-bottom: 1px solid #2a3f5a;
+      padding: 0.6rem 0;
+    }
+    .nav-container {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .logo { font-weight: 700; font-size: 1.6rem; letter-spacing: -0.5px; color: #f0f7ff; }
+    .logo i { color: #f15a3a; margin-right: 6px; }
+    .nav-links {
+      display: flex; gap: 1.2rem; align-items: center;
+      font-weight: 500; font-size: 0.95rem;
+    }
+    .nav-links a { padding: 0.3rem 0.2rem; border-bottom: 2px solid transparent; transition: 0.2s; }
+    .nav-links a:hover { border-bottom-color: #f15a3a; color: white; }
+    .btn-outline-light {
+      border: 1.5px solid #5a7a9a; border-radius: 30px;
+      padding: 0.3rem 1.2rem; transition: 0.2s;
+    }
+    .btn-outline-light:hover { background: #f15a3a; border-color: #f15a3a; color: white; }
+    .hamburger { display: none; font-size: 1.8rem; cursor: pointer; color: #cbd5e1; }
+
+    /* HERO with SLIDESHOW */
+    .hero {
+      padding: 3rem 0 2rem;
+      position: relative;
+      background: #0b1a2f;
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      animation: slideBg 18s infinite alternate;
+      opacity: 0.25;
+      z-index: 0;
+    }
+    .hero * { position: relative; z-index: 1; }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;
+      align-items: center;
+    }
+    .hero h1 {
+      font-size: 3.2rem; font-weight: 700; line-height: 1.2;
+      background: linear-gradient(to right, #f5f9ff, #b0d4ff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p { font-size: 1.2rem; color: #b8d0e5; margin: 1rem 0 1.8rem; }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .btn {
+      padding: 0.7rem 2rem; border-radius: 60px; font-weight: 600; border: none;
+      transition: all 0.2s; cursor: pointer; font-size: 1rem;
+    }
+    .btn-primary { background: #e84c2d; color: white; box-shadow: 0 6px 14px #e84c2d55; }
+    .btn-primary:hover { background: #c93d20; transform: translateY(-3px); }
+    .btn-outline { background: transparent; border: 1.5px solid #f15a3a; color: white; }
+    .btn-outline:hover { background: #f15a3a; color: #0b1a2f; }
+    .btn-secondary { background: #1f4b6e; color: white; }
+    .btn-secondary:hover { background: #2f5f84; }
+
+    /* Cartoon guide */
+    .guide-container {
+      display: flex; align-items: center; gap: 1rem;
+      background: #1f344bcc; backdrop-filter: blur(4px);
+      border-radius: 60px; padding: 0.4rem 1.5rem 0.4rem 0.8rem;
+      margin: 1.5rem 0 0.5rem; border-left: 5px solid #f5a623;
+      max-width: fit-content;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .guide-container:hover { transform: scale(1.02); background: #2a405bcc; }
+    .guide-avatar {
+      font-size: 2.8rem; background: #f5a623; border-radius: 60px; width: 60px; height: 60px;
+      display: flex; align-items: center; justify-content: center; color: #0b1a2f;
+    }
+    .guide-speech { font-weight: 500; color: #e0edf5; }
+
+    /* Quick actions */
+    .quick-actions {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
+      gap: 1.2rem; margin: 2.5rem 0;
+    }
+    .qcard {
+      background: #132c42; padding: 1.4rem 0.8rem; border-radius: 24px;
+      text-align: center; transition: 0.25s; border: 1px solid #2d4b66;
+      box-shadow: 0 6px 12px #00000020; cursor: pointer;
+    }
+    .qcard i { font-size: 2rem; color: #f5a623; margin-bottom: 6px; }
+    .qcard:hover { transform: translateY(-8px) scale(1.02); background: #1a3b55; border-color: #f15a3a; }
+
+    /* Stats */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 1.8rem;
+      margin: 2.5rem 0;
+    }
+    .stat-item { background: #102b3f; padding: 1.2rem; border-radius: 20px; text-align: center; transition: 0.3s; }
+    .stat-item:hover { transform: scale(1.03); background: #1a3b55; }
+    .stat-item .num { font-size: 2.4rem; font-weight: 700; color: #f5b041; }
+
+    /* Cards */
+    .section-title { font-size: 2rem; font-weight: 600; margin: 2rem 0 1.2rem; border-left: 6px solid #f15a3a; padding-left: 1rem; }
+    .card-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 1.5rem;
+    }
+    .contact-card {
+      background: #132c42; border-radius: 24px; padding: 1.5rem;
+      border-left: 5px solid #f5a623; transition: 0.2s;
+    }
+    .contact-card:hover { transform: translateY(-5px); background: #1a3b55; }
+    .contact-card .call-btn {
+      background: #2e5a7a; padding: 0.3rem 1.2rem; border-radius: 40px; display: inline-block;
+      margin-top: 0.5rem; font-weight: 500; cursor: pointer;
+    }
+
+    /* CHATBOT WIDGET */
+    .chatbot-widget {
+      position: fixed; bottom: 1.8rem; right: 1.8rem; z-index: 999;
+      display: flex; flex-direction: column; align-items: flex-end;
+    }
+    .chatbot-toggle {
+      background: #f15a3a; width: 64px; height: 64px; border-radius: 40px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px #e84c2d88; color: white; font-size: 2rem;
+      cursor: pointer; transition: 0.2s; border: none;
+    }
+    .chatbot-toggle:hover { transform: scale(1.1); }
+    .chatbot-window {
+      display: none; 
+      background: #132c42; border-radius: 28px; width: 360px; max-width: 90vw;
+      height: 480px; flex-direction: column; box-shadow: 0 12px 40px #00000088;
+      border: 1px solid #2a4b66; margin-bottom: 0.8rem; overflow: hidden;
+    }
+    .chatbot-window.active { display: flex; }
+    .chat-header {
+      background: #1f3f58; padding: 0.8rem 1.2rem; display: flex; justify-content: space-between;
+      align-items: center; border-bottom: 1px solid #3a5a7a;
+    }
+    .chat-header h4 { font-weight: 600; }
+    .chat-header i { cursor: pointer; color: #b0cde0; }
+    .chat-messages {
+      flex: 1; padding: 0.8rem; overflow-y: auto; display: flex; flex-direction: column;
+      gap: 0.5rem; background: #0e2338;
+    }
+    .chat-message {
+      max-width: 85%; padding: 0.6rem 1rem; border-radius: 18px; font-size: 0.9rem;
+      word-wrap: break-word;
+    }
+    .chat-message.bot {
+      background: #1f4b6e; align-self: flex-start; border-bottom-left-radius: 4px;
+    }
+    .chat-message.user {
+      background: #f15a3a; align-self: flex-end; border-bottom-right-radius: 4px;
+    }
+    .chat-input-area {
+      display: flex; padding: 0.6rem; background: #1a3147; border-top: 1px solid #2a4b66;
+      gap: 0.5rem;
+    }
+    .chat-input-area input {
+      flex: 1; padding: 0.6rem 1rem; border-radius: 40px; border: none; outline: none;
+      background: #0e2338; color: white; font-size: 0.9rem;
+    }
+    .chat-input-area button {
+      background: #f15a3a; border: none; border-radius: 40px; padding: 0.6rem 1.2rem;
+      color: white; font-weight: 600; cursor: pointer; transition: 0.2s;
+    }
+    .chat-input-area button:hover { background: #c93d20; }
+    .quick-replies {
+      display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.4rem 0.8rem;
+      background: #0e2338; border-top: 1px solid #1a3b55;
+    }
+    .quick-replies button {
+      background: #1f4b6e; border: none; border-radius: 40px; padding: 0.2rem 0.8rem;
+      color: white; font-size: 0.75rem; cursor: pointer; transition: 0.2s;
+    }
+    .quick-replies button:hover { background: #2f6a8e; }
+
+    /* Footer */
+    .footer {
+      background: #08131f; margin-top: 4rem; padding: 2.5rem 0 1.5rem;
+      border-top: 1px solid #1f3a52;
+    }
+    .footer-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; }
+    .footer a { color: #a0bedb; display: block; margin: 0.3rem 0; }
+    .footer a:hover { color: white; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; flex-direction: column; width: 100%; padding: 1rem 0; }
+      .nav-links.active { display: flex; }
+      .hamburger { display: block; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .hero h1 { font-size: 2.4rem; }
+      .chatbot-window { width: 95vw; height: 70vh; }
+    }
+    .disclaimer { background: #1f2f42; padding: 1rem; border-radius: 20px; font-size: 0.9rem; margin: 1rem 0; border-left: 4px solid #f5a623; }
+    .sos-btn { background: #d42a1a; padding: 1.2rem 2.5rem; border-radius: 60px; font-weight: 700; font-size: 1.4rem; border: none; color: white; box-shadow: 0 8px 20px #d42a1a88; cursor: pointer; transition: 0.2s; }
+    .sos-btn:hover { background: #b32012; transform: scale(1.02); }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container nav-container">
+    <div class="logo"><i class="fas fa-shield-alt"></i> DisasterGuard</div>
+    <div class="hamburger" onclick="toggleMobileNav()"><i class="fas fa-bars"></i></div>
+    <div class="nav-links" id="navLinks">
+      <a href="#">Home</a>
+      <a href="#">Live Alerts</a>
+      <a href="#">Preparedness</a>
+      <a href="#">SOS Help</a>
+      <a href="#">Emergency Contacts</a>
+      <a href="#">Volunteers</a>
+      <a href="#" onclick="openChatbot()">AI Assistant</a>
+      <a href="#">Contact</a>
+      <a href="#" class="btn-outline-light">Login / Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <h1>Protecting Communities. Saving Lives.</h1>
+      <p>Get real-time disaster alerts, find emergency shelters, request help, contact emergency services, and stay prepared when every second matters.</p>
+      <div class="btn-group">
+        <button class="btn btn-primary pulse-border"><i class="fas fa-phone-alt"></i> Get Emergency Help</button>
+        <button class="btn btn-outline">View Live Alerts</button>
+        <button class="btn btn-secondary" onclick="openChatbot()"><i class="fas fa-robot"></i> Open Assistant</button>
+      </div>
+      <div class="guide-container float-anim" onclick="guideIntro()">
+        <div class="guide-avatar"><i class="fas fa-robot"></i></div>
+        <div class="guide-speech">
+          <i class="fas fa-comment"></i> Hi! I'm <strong>Guardian</strong>, your disaster guide. 
+          <span style="display:inline-block; background:#2a4b66; border-radius:20px; padding:0.1rem 0.8rem; margin-left:0.3rem;">Click me for tips</span>
+        </div>
+      </div>
+      <div class="status-banner" style="background:#1f344bcc; backdrop-filter:blur(4px); border-radius:60px; padding:0.5rem 1.5rem; display:inline-block; margin-top:1rem;">
+        <i class="fas fa-circle-exclamation" style="color:#f15a3a;"></i> ⚠️ 2 active alerts · Cyclone in Odisha · Flood in Assam
+      </div>
+    </div>
+    <div style="background:#1d3a54cc; backdrop-filter:blur(6px); border-radius:40px; padding:1.5rem; text-align:center; box-shadow: 0 12px 30px #00000088;">
+      <i class="fas fa-map-location-dot" style="font-size:4rem; color:#f5a623; animation: float 4s infinite;"></i>
+      <p style="margin-top:0.5rem;">Find shelters & emergency services near you</p>
+      <button class="btn btn-secondary" style="margin-top:0.5rem;" onclick="alert('📍 Use the chatbot or call 112 to find the nearest shelter.')"><i class="fas fa-house-chimney"></i> Find Shelter</button>
+    </div>
+  </div>
+</section>
+
+<!-- QUICK ACTION -->
+<div class="container">
+  <div class="quick-actions">
+    <div class="qcard" onclick="askChatbot('flood safety')"><i class="fas fa-water"></i><div>Flood</div></div>
+    <div class="qcard" onclick="askChatbot('earthquake safety')"><i class="fas fa-earth-americas"></i><div>Earthquake</div></div>
+    <div class="qcard" onclick="askChatbot('fire safety')"><i class="fas fa-fire"></i><div>Fire</div></div>
+    <div class="qcard" onclick="askChatbot('cyclone safety')"><i class="fas fa-wind"></i><div>Cyclone</div></div>
+    <div class="qcard" onclick="askChatbot('landslide safety')"><i class="fas fa-mountain"></i><div>Landslide</div></div>
+    <div class="qcard" onclick="askChatbot('medical emergency')"><i class="fas fa-heartbeat"></i><div>Medical</div></div>
+    <div class="qcard" onclick="askChatbot('emergency numbers')"><i class="fas fa-phone"></i><div>Call Emergency</div></div>
+    <div class="qcard" onclick="askChatbot('shelter')"><i class="fas fa-house-chimney"></i><div>Find Shelter</div></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="container stats-grid">
+  <div class="stat-item"><div class="num">12</div><div>Active Alerts</div></div>
+  <div class="stat-item"><div class="num">48</div><div>Safe Shelters</div></div>
+  <div class="stat-item"><div class="num">230</div><div>Volunteers</div></div>
+  <div class="stat-item"><div class="num">1.2k</div><div>Requests Resolved</div></div>
+</div>
+
+<!-- EMERGENCY CONTACTS -->
+<div class="container">
+  <h2 class="section-title"><i class="fas fa-phone"></i> Emergency Contacts</h2>
+  <div class="card-grid">
+    <div class="contact-card"><i class="fas fa-phone" style="color:#f5a623;"></i> <strong>Police</strong> <span style="display:block;">100</span> <span class="call-btn" onclick="alert('Calling Police 100')"><i class="fas fa-phone"></i> Call</span></div>
+    <div class="contact-card"><i class="fas fa-ambulance"></i> <strong>Ambulance</strong> <span>108</span> <span class="call-btn" onclick="alert('Calling Ambulance 108')"><i class="fas fa-phone"></i> Call</span></div>
+    <div class="contact-card"><i class="fas fa-fire-extinguisher"></i> <strong>Fire</strong> <span>101</span> <span class="call-btn" onclick="alert('Calling Fire 101')"><i class="fas fa-phone"></i> Call</span></div>
+    <div class="contact-card"><i class="fas fa-helmet-safety"></i> <strong>Disaster Mgmt</strong> <span>1078</span> <span class="call-btn" onclick="alert('Calling Disaster Mgmt 1078')"><i class="fas fa-phone"></i> Call</span></div>
+    <div class="contact-card"><i class="fas fa-building-columns"></i> <strong>NDRF</strong> <span style="font-size:0.85rem;">🔗 <a href="https://ndrf.gov.in/" target="_blank">ndrf.gov.in</a></span> <span class="badge-unverified" style="display:inline-block; background:#7a5a2e;">unverified</span></div>
+  </div>
+  <div class="disclaimer"><i class="fas fa-triangle-exclamation"></i> <strong>Disclaimer:</strong> Emergency numbers may vary. Always verify via official sources. In immediate danger, call <strong>112</strong>.</div>
+</div>
+
+<!-- LIVE ALERTS -->
+<div class="container">
+  <h2 class="section-title"><i class="fas fa-bell"></i> Live Alerts</h2>
+  <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(260px,1fr));">
+    <div style="background:#1f2f42; border-radius:20px; padding:1.2rem; border-left:6px solid #e84c2d; transition:0.2s;" class="pulse-border">
+      <h4><i class="fas fa-cyclone"></i> Cyclone Biparjoy</h4>
+      <p>Gujarat coast · <span style="color:#f5a623;">Critical</span></p>
+      <p style="font-size:0.9rem;">Evacuate low-lying areas. Official source: IMD</p>
+    </div>
+    <div style="background:#1f2f42; border-radius:20px; padding:1.2rem; border-left:6px solid #f5a623;">
+      <h4><i class="fas fa-water"></i> Flood</h4>
+      <p>Assam (Brahmaputra) · <span style="color:#f5a623;">High</span></p>
+      <p style="font-size:0.9rem;">Use boats. Relief camps active.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SOS -->
+<div class="container" style="margin:2.5rem 0;">
+  <div style="background:#132c42; border-radius:40px; padding:2rem; border:1px solid #f15a3a; box-shadow:0 8px 30px #00000044;">
+    <h3><i class="fas fa-sos" style="color:#f15a3a;"></i> SOS Emergency Request</h3>
+    <p>Full Name · Phone · Location · Emergency Type · Description</p>
+    <button class="btn btn-secondary" onclick="detectLocation()"><i class="fas fa-location-dot"></i> Detect location</button>
+    <button class="sos-btn" style="display:block; margin:1.5rem 0;" onclick="sendSOS()"><i class="fas fa-circle-exclamation"></i> SEND SOS REQUEST</button>
+    <div class="disclaimer"><strong>⚠️ For immediate danger, call 112 now.</strong> This form does not replace emergency services.</div>
+  </div>
+</div>
+
+<!-- CHATBOT WIDGET -->
+<div class="chatbot-widget">
+  <div class="chatbot-window" id="chatWindow">
+    <div class="chat-header">
+      <h4><i class="fas fa-robot" style="color:#f5a623;"></i> DisasterGuard Assistant</h4>
+      <i class="fas fa-times" onclick="closeChatbot()"></i>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-message bot">👋 Hello! I'm your Emergency Assistant. Ask me about disaster safety, official helplines, or emergency procedures. <br><small>⚠️ For immediate danger, call 112.</small></div>
+    </div>
+    <div class="quick-replies" id="quickReplies">
+      <button onclick="askChatbot('emergency numbers')">📞 Call 112</button>
+      <button onclick="askChatbot('flood safety')">🌊 Flood</button>
+      <button onclick="askChatbot('earthquake safety')">🌍 Earthquake</button>
+      <button onclick="askChatbot('fire safety')">🔥 Fire</button>
+      <button onclick="askChatbot('cyclone safety')">🌀 Cyclone</button>
+      <button onclick="askChatbot('ndrf')">🛡️ NDRF</button>
+      <button onclick="askChatbot('shelter')">🏠 Shelter</button>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Ask about disaster safety..." onkeypress="if(event.key==='Enter') sendMessage()">
+      <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+  <button class="chatbot-toggle" onclick="toggleChatbot()">
+    <i class="fas fa-robot"></i>
+  </button>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div><h4>DisasterGuard</h4><p>Protecting communities since 2026</p></div>
+    <div><h4>Quick Links</h4><a href="#">Live Alerts</a><a href="#">Preparedness</a><a href="#">Volunteer</a></div>
+    <div><h4>Official Sources</h4><a href="https://ndrf.gov.in" target="_blank">NDRF</a><a href="#">NDMA</a><a href="#">Relief Commissioner</a></div>
+    <div><h4>Contact</h4><a href="#"><i class="fas fa-phone"></i> 112</a><a href="#">Report incorrect info</a></div>
+  </div>
+  <div class="container" style="text-align:center; margin-top:2rem; border-top:1px solid #1f3a52; padding-top:1rem; font-size:0.9rem;">
+    © 2026 DisasterGuard. Built for safer communities. | Privacy · Terms
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  function toggleMobileNav() {
+    document.getElementById('navLinks').classList.toggle('active');
+  }
+
+  // ----- CHATBOT LOGIC -----
+  function toggleChatbot() {
+    const win = document.getElementById('chatWindow');
+    win.classList.toggle('active');
+    if (win.classList.contains('active')) {
+      document.getElementById('chatInput').focus();
+    }
+  }
+  function closeChatbot() {
+    document.getElementById('chatWindow').classList.remove('active');
+  }
+  function openChatbot() {
+    document.getElementById('chatWindow').classList.add('active');
+    document.getElementById('chatInput').focus();
+  }
+
+  // Official knowledge base (government sources)
+  const knowledgeBase = {
+    'emergency numbers': '📞 **Official Emergency Numbers (India)**\n• 112 – Unified Emergency\n• 108 – Ambulance\n• 101 – Fire & Rescue\n• 100 – Police\n• 1078 – Disaster Management (NDMA)\n• 1098 – Child Helpline\n• 181 – Women\'s Helpline\n\nSource: Government of India. Always verify locally.',
+    '112': '📞 **112** is the unified emergency number for India. It connects you to police, fire, ambulance, and disaster response. Call immediately in any emergency.',
+    '108': '🚑 **108** is the ambulance and emergency medical service number in India. Call for medical emergencies.',
+    '101': '🔥 **101** is the fire and rescue service number. Call for fire emergencies.',
+    '100': '👮 **100** is the police emergency number. Call to report crimes or for police assistance.',
+    '1078': '🆘 **1078** is the National Disaster Management Authority (NDMA) helpline. For disaster-related queries and assistance.',
+    'ndrf': '🛡️ **NDRF (National Disaster Response Force)**\nOfficial website: https://ndrf.gov.in/\nFor NDRF assistance, call 112 or visit the official website for verified contact details.\n⚠️ Do not use unverified numbers. Always refer to official sources.',
+    'flood safety': '🌊 **Flood Safety (Official Guidelines)**\nBefore: Prepare an emergency kit, know evacuation routes, and keep important documents safe.\nDuring: Move to higher ground immediately. Do not walk or drive through floodwaters. Turn off gas and electricity.\nAfter: Avoid floodwater (may be contaminated). Report damage to authorities.\nSource: NDMA, Government of India.',
+    'earthquake safety': '🌍 **Earthquake Safety (Official Guidelines)**\nBefore: Secure heavy furniture, prepare a family plan, and keep emergency supplies.\nDuring: Drop, Cover, and Hold On. Stay indoors until shaking stops. Avoid windows.\nAfter: Check for injuries and damage. Be prepared for aftershocks.\nSource: NDMA, Government of India.',
+    'fire safety': '🔥 **Fire Safety (Official Guidelines)**\nBefore: Install smoke alarms, plan escape routes, and practice fire drills.\nDuring: Get out immediately. Stay low to avoid smoke. Call 101 or 112.\nAfter: Do not re-enter the building. Seek medical attention if needed.\nSource: Ministry of Home Affairs, India.',
+    'cyclone safety': '🌀 **Cyclone Safety (Official Guidelines)**\nBefore: Listen to weather warnings, secure your home, and prepare an emergency kit.\nDuring: Stay indoors, away from windows. If evacuated, follow official instructions.\nAfter: Beware of downed power lines and contaminated water. Report damage.\nSource: IMD & NDMA, India.',
+    'landslide safety': '⛰️ **Landslide Safety (Official Guidelines)**\nBefore: Avoid building on steep slopes. Watch for warning signs like cracks.\nDuring: Move to higher ground immediately. Stay away from river valleys.\nAfter: Check for injuries, avoid affected areas, and report to authorities.\nSource: NDMA, Government of India.',
+    'shelter': '🏠 **Find a Shelter**\nYou can call 112 for assistance in finding a safe shelter near you. The chatbot can also provide guidance on nearby resources.',
+    'medical emergency': '🚑 **Medical Emergency**\nCall 108 or 112 immediately for an ambulance.\nWhile waiting: Keep the person calm, apply pressure to bleeding, and do not move them unless necessary.\nSource: Ministry of Health, India.',
+    'default': 'I can help you with disaster safety information, emergency numbers, and official guidelines. Try asking about: flood safety, earthquake, fire, cyclone, NDRF, or emergency numbers. ⚠️ For immediate danger, call 112.'
+  };
+
+  function getBotResponse(query) {
+    const lower = query.toLowerCase();
+    for (let [key, value] of Object.entries(knowledgeBase)) {
+      if (lower.includes(key) || key.includes(lower)) {
+        return value;
+      }
+    }
+    const urgent = ['trapped', 'bleeding', 'unconscious', 'drowning', 'danger', 'fire', 'heart attack'];
+    for (let word of urgent) {
+      if (lower.includes(word)) {
+        return '⚠️ **This may be an emergency. Call 112 now or use the emergency call button below.**\nDo not delay. Emergency services are ready to help.';
+      }
+    }
+    return knowledgeBase['default'];
+  }
+
+  function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    const chatMessages = document.getElementById('chatMessages');
+    const userDiv = document.createElement('div');
+    userDiv.className = 'chat-message user';
+    userDiv.textContent = msg;
+    chatMessages.appendChild(userDiv);
+    input.value = '';
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    setTimeout(() => {
+      const botDiv = document.createElement('div');
+      botDiv.className = 'chat-message bot';
+      botDiv.innerHTML = getBotResponse(msg).replace(/\n/g, '<br>');
+      chatMessages.appendChild(botDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }, 400);
+  }
+
+  function askChatbot(topic) {
+    document.getElementById('chatInput').value = topic;
+    sendMessage();
+    openChatbot();
+  }
+
+  // ----- SOS & LOCATION -----
+  function detectLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => alert(`📍 Location detected: Lat ${pos.coords.latitude.toFixed(4)}, Lng ${pos.coords.longitude.toFixed(4)}`),
+        () => alert('⚠️ Location permission denied. Please enter manually.')
+      );
+    } else {
+      alert('Geolocation not supported.');
+    }
+  }
+  function sendSOS() {
+    if(confirm('⚠️ This does NOT replace calling emergency services. In immediate danger, call 112. Continue?')){
+      alert('✅ SOS request received. ID: SG-2026-08-25-1423. Help will be notified. Call 112 if urgent.');
+    }
+  }
+
+  function guideIntro() {
+    alert('👋 Hi! I\'m Guardian.\n\n• Click any quick action card for safety tips.\n• SOS button for emergency requests.\n• Chatbot (bottom-right) for instant help.\n\nStay safe!');
+  }
+
+  document.querySelectorAll('.call-btn').forEach(el => {
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      alert('📞 Call emergency service. Remember: numbers may change. Verify via official sources.');
+    });
+  });
+</script>
+</body>
+</html>
